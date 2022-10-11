@@ -16,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/AlexValdiviezo/stress/issues"
   },
-  "homepage": "https://github.com/AlexValdiviezo/stress#readme"
+  "homepage": "https://github.com/AlexValdiviezo/stress#readme",
+  "dependencies": {
+    "commander": "^9.4.1",
+    "mariadb": "^3.0.1"
+  }
 }
