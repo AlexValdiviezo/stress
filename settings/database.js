@@ -1,11 +1,11 @@
 const mariadb = require('mariadb')
 
 const pool = mariadb.createPool({
-    host: '127.0.0.1',
-    port: '3307',
-    user: 'root',
-    password: 'mypassword',
-    database: 'celco'
+    host: '192.168.10.50',
+    port: '3306',
+    user: 'appuser',
+    password: 'AppUs3r.3135',
+    database: 'cmp_prepro'
 });
 
 async function getConnection(){

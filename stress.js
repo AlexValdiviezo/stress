@@ -1,6 +1,9 @@
 const { exec } = require('child_process')
 const { program } = require('commander');
 
+const celco = ['movistar', 'personal', 'claro']
+console.log(celco[Math.floor(Math.random() * 3)])
+
 program
     .name('API CLI - DataBase Stresser')
     .description('CLI to stress database')

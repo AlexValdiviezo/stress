@@ -16,7 +16,7 @@ const insertRecords = async ({records, number}) => {
     number = Number(number)
     console.time('t')
     console.log(records, number)
-    const celco = ['personal, movistar, claro']
+    const celco = ['personal', 'movistar', 'claro']
     const conn = await pool.getConnection()
     while(records > 0){
         recordPromises = [];
@@ -24,15 +24,16 @@ const insertRecords = async ({records, number}) => {
             cantRecordPromises ++
             try{
                 for(let i = 1 ; i<records ; i ++){
+                    const company = celco
                     const query = `INSERT INTO portabilidad (sourceAddress, lastCommit, celco) 
                     VALUES 
-                    ('${number}', '${new Date().toISOString().slice(0, 19).replace('T', ' ')}', '${celco[Math.random() * 3]}}');`
+                    ('${number}', '${new Date().toISOString().slice(0, 19).replace('T', ' ')}', '${celco[Math.floor(Math.random() * 3)]}');`
                     conn.query(query)
                     number++
                 }
                 const query = `INSERT INTO portabilidad (sourceAddress, lastCommit, celco) 
                     VALUES 
-                    ('${number}', '${new Date().toISOString().slice(0, 19).replace('T', ' ')}', '${celco[Math.random() * 3]}}');`
+                    ('${number}', '${new Date().toISOString().slice(0, 19).replace('T', ' ')}', '${celco[Math.random() * 3]}');`
                     await conn.query(query)
                     number++
             }catch(error){
@@ -45,13 +46,13 @@ const insertRecords = async ({records, number}) => {
                 for(let i = 1 ; i<500 ; i ++){
                     const query = `INSERT INTO portabilidad (sourceAddress, lastCommit, celco) 
                     VALUES 
-                    ('${number}', '${new Date().toISOString().slice(0, 19).replace('T', ' ')}', '${celco[Math.random() * 3]}}');`
+                    ('${number}', '${new Date().toISOString().slice(0, 19).replace('T', ' ')}', '${celco[Math.random() * 3]}');`
                     conn.query(query)
                     number++
                 }
                 const query = `INSERT INTO portabilidad (sourceAddress, lastCommit, celco) 
                     VALUES 
-                    ('${number}', '${new Date().toISOString().slice(0, 19).replace('T', ' ')}', '${celco[Math.random() * 3]}}');`
+                    ('${number}', '${new Date().toISOString().slice(0, 19).replace('T', ' ')}', '${celco[Math.random() * 3]}');`
                     await conn.query(query)
                     number++
             }catch(error){
