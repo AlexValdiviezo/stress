@@ -1,68 +1,60 @@
 const pool = require('../settings/database')
 
 let recordPromises = [];
-let cantRecordPromises = 0;
+
+const getRandomCelco = () => {       
+    const celcos = ['personal', 'movistar', 'claro']  
+    return celcos[Math.floor(Math.random() * 3)]  
+}      
+const getQuery = (number) => {         
+    return `INSERT INTO portabilidad (sourceAddress, celco) VALUES ('${number}', '${getRandomCelco()}')`;     
+}
+
+const createPromiseArray = (conn, number) => {
+    recordPromises.push(conn.query(getQuery(number)))
+}
+
 
 const insertRecords = async ({records, number}) => {
-    try {
+
+    console.time('t')
+
         if(records === undefined || number === undefined){
-            throw Error("Records y number son obligatorios")
+            console.log("Records y number son obligatorios")
+            process.exit(0)
+            return 
         }
-    } catch (error) {
-        console.log(error)
-        return 
-    }
+
+
     records = Number(records)
     number = Number(number)
-    console.time('t')
-    console.log(records, number)
-    const celco = ['personal', 'movistar', 'claro']
+
     const conn = await pool.getConnection()
+
     while(records > 0){
+
+        let rounds = records < 500 ? records : 500
+
         recordPromises = [];
-        if(records < 500){
-            cantRecordPromises ++
-            try{
-                for(let i = 1 ; i<records ; i ++){
-                    const company = celco
-                    const query = `INSERT INTO portabilidad (sourceAddress, lastCommit, celco) 
-                    VALUES 
-                    ('${number}', '${new Date().toISOString().slice(0, 19).replace('T', ' ')}', '${celco[Math.floor(Math.random() * 3)]}');`
-                    conn.query(query)
-                    number++
-                }
-                const query = `INSERT INTO portabilidad (sourceAddress, lastCommit, celco) 
-                    VALUES 
-                    ('${number}', '${new Date().toISOString().slice(0, 19).replace('T', ' ')}', '${celco[Math.random() * 3]}');`
-                    await conn.query(query)
-                    number++
-            }catch(error){
-                console.log(error)
+
+        try{
+            for(let i = 0 ; i<rounds ; i ++){
+                createPromiseArray(conn, number)
+                number++
             }
-            records -= records
-        }else{
-            cantRecordPromises ++
-            try{
-                for(let i = 1 ; i<500 ; i ++){
-                    const query = `INSERT INTO portabilidad (sourceAddress, lastCommit, celco) 
-                    VALUES 
-                    ('${number}', '${new Date().toISOString().slice(0, 19).replace('T', ' ')}', '${celco[Math.random() * 3]}');`
-                    conn.query(query)
-                    number++
-                }
-                const query = `INSERT INTO portabilidad (sourceAddress, lastCommit, celco) 
-                    VALUES 
-                    ('${number}', '${new Date().toISOString().slice(0, 19).replace('T', ' ')}', '${celco[Math.random() * 3]}');`
-                    await conn.query(query)
-                    number++
-            }catch(error){
-                console.log(error)
-            }
-            records -= 500
+            await Promise.all(recordPromises)
+            recordPromises = []
+        }catch(error){
+            console.log(error)
         }
+
+        records -= rounds
     }
+
     console.timeEnd('t')
+
     process.exit(0)
+
 }
 
 module.exports = {insertRecords}

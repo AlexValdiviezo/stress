@@ -1,9 +1,6 @@
 const { exec } = require('child_process')
 const { program } = require('commander');
 
-const celco = ['movistar', 'personal', 'claro']
-console.log(celco[Math.floor(Math.random() * 3)])
-
 program
     .name('API CLI - DataBase Stresser')
     .description('CLI to stress database')
@@ -11,6 +8,7 @@ program
     .option('-c, --cores <number>', 'number of processor cores')
     .option('-r, --records <number>', 'number of records to enter in the database')
     .option('-n, --number <number>', 'number to start records')
+    .option('-p, --parallel <number>', 'number of parallel promises')
     .action(({cores = 1, records, number})=>{
         cores = Number(cores)
         records = Number(records)
