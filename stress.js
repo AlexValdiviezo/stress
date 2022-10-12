@@ -1,20 +1,19 @@
 const { exec } = require('child_process')
-const { program } = require('commander');
+const { program } = require('commander')
 
 program
     .name('API CLI - DataBase Stresser')
     .description('CLI to stress database')
     .version('1.0.0')
     .option('-c, --cores <number>', 'number of processor cores')
-    .option('-r, --records <number>', 'number of records to enter in the database')
-    .option('-n, --number <number>', 'number to start records')
-    .option('-p, --parallel <number>', 'number of parallel promises')
-    .action(({cores = 1, records, number})=>{
+    .option('-r, --records-quantity <number>', 'number of records to enter in the database')
+    .option('-s, --start-number <number>', 'number to start records')
+    .action(({cores = 1, recordsQuantity, startNumber})=>{
         cores = Number(cores)
-        records = Number(records)
-        number = Number(number)
+        recordsQuantity = Number(recordsQuantity)
+        startNumber = Number(startNumber)
         for(let i = 0; i<cores; i++){
-            exec(`node app -r ${records/cores} -n ${number+(records*i)}`, (error, stdout, stderr) => {
+            exec(`node app -r ${recordsQuantity/cores} -s ${startNumber+(recordsQuantity*i)}`, (error, stdout, stderr) => {
                 if(error) {
                     console.error(`error: ${error.message}`)
                     return
